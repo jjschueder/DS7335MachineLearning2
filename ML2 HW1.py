@@ -74,20 +74,54 @@ flower_orders=['W/R/B','W/R/B','W/R/B','W/R/B','W/R/B','W/R/B','W/R/B','W/R/B','
 # 1. Build a counter object and use counter and confirm they have the same values.
 
 cnt = Counter()
-wcnt = 0
+
 for word in flower_orders:
      cnt[word] += 1
-     if 'W' in word:
-         wcnt += 1
+
 cnt
-wcnt
 
-c = Counter(flower_orders)
-
-c['W']
 
 # 2. Count how many objects have color W in them.
+
+#first convert from list of strings to list of lists
+mylist = []
+listoflists = []
+for word in flower_orders:
+    mylist = list(word.split("/")) 
+    listoflists.append(mylist)
+    
+#examine new list of lists to get counts
+wcounter = 0
+for word in listoflists:
+    wcounter += word.count('W')    
+    
 # 3. Make histogram of colors
+#create the counter object by merging into one big list then counting
+import itertools
+biglist = (list(itertools.chain.from_iterable(listoflists))) 
+colorcounter = Counter()
+
+for color in biglist:
+    print(color)
+    colorcounter[color] += 1
+
+colorcounter
+colorcountdict = dict(colorcounter)
+#visualize with matplotlib
+import matplotlib.pyplot as plt
+
+# An "interface" to matplotlib.axes.Axes.hist() method
+n, bins, patches = plt.hist(x=colorcounter, bins='auto', color='#0504aa',
+                            alpha=0.7, rwidth=0.85)
+plt.grid(axis='y', alpha=0.75)
+plt.xlabel('Value')
+plt.ylabel('Frequency')
+plt.title('My Very Own Histogram')
+plt.text(23, 45, r'$\mu=15, b=3$')
+maxfreq = n.max()
+# Set a clean upper y-axis limit.
+plt.ylim(ymax=np.ceil(maxfreq / 10) * 10 if maxfreq % 10 else maxfreq + 10)   
+
 # 4. Rank the tuples of color pairs regardless of how many colors in order.
 # 5. Rank the triples of color pairs regardless of how many colors in order.
 # 6. Make dictionary of where keys are a color and values are what colors go with it
