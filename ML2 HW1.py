@@ -13,7 +13,7 @@ Created on Wed Jan  6 20:23:31 2021
 # ==============================================================================
 
 from collections import Counter
-
+import numpy as np
 
 # ts# please fill in an explanation of each function and an example of how to use it below.
 
@@ -109,21 +109,12 @@ colorcounter
 colorcountdict = dict(colorcounter)
 #visualize with matplotlib
 import matplotlib.pyplot as plt
+plt.bar(colorcountdict.keys(), colorcountdict.values())
+plt.show()
 
-# An "interface" to matplotlib.axes.Axes.hist() method
-n, bins, patches = plt.hist(x=colorcounter, bins='auto', color='#0504aa',
-                            alpha=0.7, rwidth=0.85)
-plt.grid(axis='y', alpha=0.75)
-plt.xlabel('Value')
-plt.ylabel('Frequency')
-plt.title('My Very Own Histogram')
-plt.text(23, 45, r'$\mu=15, b=3$')
-maxfreq = n.max()
-# Set a clean upper y-axis limit.
-plt.ylim(ymax=np.ceil(maxfreq / 10) * 10 if maxfreq % 10 else maxfreq + 10)   
+# 4. Rank the pairs of color pairs regardless of how many colors in order.
 
-# 4. Rank the tuples of color pairs regardless of how many colors in order.
-# 5. Rank the triples of color pairs regardless of how many colors in order.
+# 5. Rank the triplets of color pairs regardless of how many colors in order.
 # 6. Make dictionary of where keys are a color and values are what colors go with it
 # 7. Make a graph showing the probability of having an edge between two colors based on how often they co-occur.  (a numpy square matrix)
 # 8. Make 10 business questions related to the questions we asked above.
