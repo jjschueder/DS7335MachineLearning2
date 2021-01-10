@@ -66,10 +66,14 @@ thislist.pop(0)
 print(thislist)
 
 # count()
-
+#Return the number of times the value appears in the list:
+thislist.count('cherry')
 
 # reverse()
+
 # sort()
+
+
 # [1]+[1]==1
 # [y*2 for x in [[1
 # [2]*[2]
