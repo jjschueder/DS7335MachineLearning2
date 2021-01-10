@@ -16,18 +16,58 @@ from collections import Counter
 import numpy as np
 
 # ts# please fill in an explanation of each function and an example of how to use it below.
+thislist = ["apple", "banana", "cherry"]
 
 # List:
 # append()
+#Adds a value to a list.
+thislist.append('orange')
+
 # extend()
+#Adds one list to another list.
+tropical = ["mango", "pineapple", "papaya"]
+thislist.extend(tropical)
+print(thislist)
+
 # index()
+#List items are indexed and you can access them by referring to the index number.
+
+thislist[2]
+thislist.index("cherry")
+
 # index(value, integer)
+#allows for searching in a list with starting point. In the two examples below the element
+#is at position 2, so starting at position 1 finds the value, while starting at 3 does not.
+
+thislist.index("cherry", 1)
+
+thislist.index("cherry", 3)
 # insert()position
+#Adds a value to a list at the specified position.
+thislist.insert(2, "watermelon")
+print(thislist)
+
 # remove()
+#This removes the specified item from the list.
+thislist.remove("banana")
+print(thislist)
+
 
 # pop()
+#The pop method removes the specified index.
+#f you do not specify the index, the pop() method removes the last item.
 # pop(0)
+
+thislist.pop()
+print(thislist)
+
+
+thislist.pop(0)
+print(thislist)
+
 # count()
+
+
 # reverse()
 # sort()
 # [1]+[1]==1
@@ -60,6 +100,8 @@ import numpy as np
 # 	Fill in yourself
 # Strings:
 # 	Fill in yourself
+
+
 from collections import Counter
 # 	Fill in yourself
 
@@ -262,7 +304,7 @@ lists = sorted(probtransdict.items()) # sorted by key, return a list of tuples
 x, y = zip(*lists) # unpack a list of pairs into two tuples
 xlist = list(x)
 reslist = [''.join(i) for i in xlist]
-keys = list(probtransdict.keys()))
+keys = list(probtransdict.keys())
 plt.bar(reslist, probtransdict.values())
 plt.show()
 
