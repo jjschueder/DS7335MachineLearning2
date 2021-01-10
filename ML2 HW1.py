@@ -70,9 +70,15 @@ print(thislist)
 thislist.count('cherry')
 
 # reverse()
+print(thislist)
+#The reverse() method reverses the sorting order of the elements.
+thislist.reverse()
+print(thislist)
 
 # sort()
-
+#The sort() method sorts the list ascending by default.
+#You can also make a function to decide the sorting criteria(s).
+thislist.sort()
 
 # [1]+[1]==1
 # [y*2 for x in [[1
@@ -81,22 +87,79 @@ thislist.count('cherry')
 # [x for x in [2,3]]
 # [x for x in [1,2] if x ,2],[3,4]] for y in x]
 
+#This joins two lists
+a = [1]+[1]
+
+#This causes a list to be duplicated.
+b =[2]*2
+b2 = [2,3,4]*2
+
+#This causes a list to be accessed from an index.
+c = [1,2][1:]
+
+#This loops through a list from position 2 to position 3
+[x for x in [2,3]]
+
+#This conditionally loops through a list from 1 to 2 looking for 1.
+[x for x in [1,2] if x ==1]
+
+#This loops through a list of lists and mulitplies each element
+#by 2 and outputs as one list
+[y*2 for x in [[1,2],[3,4]] for y in x]
+
+
 # Tuple:
+mytuple = ("apple", "banana", "cherry")
 # 	count()
+#This counts how many of the specified element are in a tuple.
+mytuple.count('banana')
+
 # 	index()
-# about:blank#blocked
+mytuple.index('banana')
+
 # build a dictionary from tuples
+#convert a lis tof tuples into a dictiory.
+listoftuples = [('a','b'),('c','d'),('e','f')]
+tupdict = dict(listoftuples)
+
 # unpack tuples
+for k, v in tupdict.items():
+    print(k,v)
 
 # Dicts:
-# a_dict = {'I hate':'you', 'You should':’leave’}
+a_dict = {'I hate':'you', 'You should':'leave'}
+
 # values()
+a_dict.values()
+
 # keys()
+a_dict.keys()
+
 # items()
+a_dict.items()
+
 # has_key()
+# The has_key() function is used to check 
+# for presence of a key in Dictionary
+#This is no longer valid in python 3 so this creates a syntax error 
+#print(a_dict.has_key('I hate'))
+#print(a_dict.has_key('you')) 
+'I hate' in a_dict
+
+
 # ‘never’ in a_dict
+#This checks if never is a key in the dictonary in this case it is not
+#so it returns false.
+'never' in a_dict
+
 # del a_dict['me']
+#The del keyword removes the item with the specified key name.
+#since 'me' is not a key this will do nothing and produce a key error
+del a_dict['You should']
+
 # a_dict.clear()
+#The clear() method empties the dictionary.
+a_dict.clear()
 
 # Ok enough by me do the rest on your own!
 # use dir() to get built in functions
@@ -112,8 +175,6 @@ from collections import Counter
 
 # Bonus:
 from itertools import *
-
-
 
 flower_orders=['W/R/B','W/R/B','W/R/B','W/R/B','W/R/B','W/R/B','W/R/B','W/R/B','W/R/B','W/R/B','W/R/B','W/R/B','W/R/B','W/R/B','W/R/B','W/R/B','W/R/B','W/R/B','W/R/B','W/R/B','W/R/B','W/R/B','W/R/B','W/R/B','W/R/B','W/R/B','W/R/B','W/R/B','W/R/B','W/R/B','W/R','W/R','W/R','W/R','W/R','W/R','W/R','W/R','W/R','W/R','W/R','W/R','W/R','W/R','W/R','W/R','R/V/Y','R/V/Y','R/V/Y','R/V/Y','R/V/Y','R/V/Y','R/V/Y','R/V/Y','R/V/Y','R/V/Y','W/R/V','W/R/V','W/R/V','W/R/V','W/R/V','W/R/V','W/R/V','W/R/V','W/R/V','W/R/V','W/N/R/V','W/N/R/V','W/N/R/V','W/N/R/V','W/N/R/V','W/N/R/V','W/N/R/V','W/N/R/V','W/R/B/Y','W/R/B/Y','W/R/B/Y','W/R/B/Y','W/R/B/Y','W/R/B/Y','B/Y','B/Y','B/Y','B/Y','B/Y','R/B/Y','R/B/Y','R/B/Y','R/B/Y','R/B/Y','W/N/R/B/V/Y','W/N/R/B/V/Y','W/N/R/B/V/Y','W/N/R/B/V/Y','W/N/R/B/V/Y','W/G','W/G','W/G','W/G','R/Y','R/Y','R/Y','R/Y','N/R/V/Y','N/R/V/Y','N/R/V/Y','N/R/V/Y','W/R/B/V','W/R/B/V','W/R/B/V','W/R/B/V','W/N/R/V/Y','W/N/R/V/Y','W/N/R/V/Y','W/N/R/V/Y','N/R/Y','N/R/Y','N/R/Y','W/V/O','W/V/O','W/V/O','W/N/R/Y','W/N/R/Y','W/N/R/Y','R/B/V/Y','R/B/V/Y','R/B/V/Y','W/R/V/Y','W/R/V/Y','W/R/V/Y','W/R/B/V/Y','W/R/B/V/Y','W/R/B/V/Y','W/N/R/B/Y','W/N/R/B/Y','W/N/R/B/Y','R/G','R/G','B/V/Y','B/V/Y','N/B/Y','N/B/Y','W/B/Y','W/B/Y','W/N/B','W/N/B','W/N/R','W/N/R','W/N/B/Y','W/N/B/Y','W/B/V/Y','W/B/V/Y','W/N/R/B/V/Y/G/M','W/N/R/B/V/Y/G/M','B/R','N/R','V/Y','V','N/R/V','N/V/Y','R/B/O','W/B/V','W/V/Y','W/N/R/B','W/N/R/O','W/N/R/G','W/N/V/Y','W/N/Y/M','N/R/B/Y','N/B/V/Y','R/V/Y/O','W/B/V/M','W/B/V/O','N/R/B/Y/M','N/R/V/O/M','W/N/R/Y/G','N/R/B/V/Y','W/R/B/V/Y/P','W/N/R/B/Y/G','W/N/R/B/V/O/M','W/N/R/B/V/Y/M','W/N/B/V/Y/G/M','W/N/B/V/V/Y/P']
 
