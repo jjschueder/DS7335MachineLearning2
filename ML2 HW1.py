@@ -114,11 +114,75 @@ plt.show()
 
 # 4. Rank the pairs of color pairs regardless of how many colors in order.
 
-# 5. Rank the triplets of color pairs regardless of how many colors in order.
-# 6. Make dictionary of where keys are a color and values are what colors go with it
-# 7. Make a graph showing the probability of having an edge between two colors based on how often they co-occur.  (a numpy square matrix)
-# 8. Make 10 business questions related to the questions we asked above.
+from itertools import permutations 
+from itertools import combinations
 
+paircombos = []
+pairpermus = []
+for i in range(len(listoflists)):
+    print(i)
+    combos = combinations(listoflists[i], 2)
+    permus = permutations(listoflists[i], 2)
+    paircombos.append(list(combos))
+    pairpermus.append(list(permus))
+
+bigpaircombolist = (list(itertools.chain.from_iterable(paircombos))) 
+bigpairpermuslist = (list(itertools.chain.from_iterable(pairpermus))) 
+
+paircounter = Counter()
+for pair in bigpaircombolist:
+    paircounter[pair] += 1
+pairdict = dict(paircounter )
+# 5. Rank the triplets of color pairs regardless of how many colors in order.
+
+from itertools import permutations 
+from itertools import combinations
+
+tricombos = []
+tripermus = []
+for i in range(len(listoflists)):
+    print(i)
+    combos = combinations(listoflists[i], 3)
+    permus = permutations(listoflists[i], 3)
+    tricombos.append(list(combos))
+    tripermus.append(list(permus))
+
+bigtricombolist = (list(itertools.chain.from_iterable(tricombos))) 
+bigtripermuslist = (list(itertools.chain.from_iterable(tripermus))) 
+
+tricounter = Counter()
+for pair in bigtricombolist:
+    tricounter[pair] += 1
+tridict = dict(tricounter)
+
+# 6. Make dictionary of where keys are a color and values are what colors go with it
+
+colorcountdict = dict(colorcounter)
+colorcountdict
+# 7. Make a graph showing the probability of having an edge between two colors based on 
+#how often they co-occur.  (a numpy square matrix)
+paircounter = Counter()
+for pair in bigpaircombolist:
+    paircounter[pair] += 1
+
+denominator= sum(pairdict.values())
+
+probdict = {'color':'prob'}
+for k, v in pairdict.items():
+    print ('k:',k)
+    print ('v', v)
+    percent = v / denominator * 100
+    print(percent)
+    d = {k:percent}
+    probdict.update(d)
+
+pairlist = list(paircounter)
+
+
+#pairdict = dict(paircounter )
+#pairarray = np.array(pairdict)
+#npsquare = np.square(pairarray)
+# 8. Make 10 business questions related to the questions we asked above.
 
 
 
@@ -148,14 +212,61 @@ dead_men_tell_taies = ['Four score and seven years ago our fathers brought forth
 
 
 # 1. Join everything
+# initialize an empty string 
+dmstring  = " " 
+dmstring = dmstring.join(dead_men_tell_taies)
+
 # 2. Remove spaces
+dmstring = dmstring.replace(" ", "")
+
+
 # 3. Occurrence probabilities for letters
-# 3. Tell me transition probabilities for every letter pairs
-# 4. Make a 26x26 graph of 4. in numpy
+denominator = len(dmstring)
+import string
+import collections
+letter_counts = collections.Counter(dmstring)
+letter_counts
+letter_count_dict = dict(letter_counts)
+
+#probdictdead = {'letter':'prob'}
+probdictdead = {}
+for k, v in letter_count_dict.items():
+    print ('k:',k)
+    print ('v', v)
+    percent = v / denominator * 100
+    print(percent)
+    d = {k:percent}
+    probdictdead.update(d)
+
+# 4. Tell me transition probabilities for every letter pairs
+trans = dict(Counter(zip(dmstring[:-1], dmstring[1:])))
+denominator = sum(trans.values())
+
+
+probtransdict = {}
+for k, v in trans.items():
+    print ('k:',k)
+    print ('v', v)
+    percent = v / denominator * 100
+    print(percent)
+    d = {k:percent}
+    probtransdict.update(d)
+# 5. Make a 26x26 graph of 4. in numpy
 # #optional
-# 5. plot graph of transition probabilities from letter to letter
+# 6. plot graph of transition probabilities from letter to letter
+#visualize with matplotlib
+import matplotlib.pylab as plt
+
+lists = sorted(probtransdict.items()) # sorted by key, return a list of tuples
+
+x, y = zip(*lists) # unpack a list of pairs into two tuples
+xlist = list(x)
+reslist = [''.join(i) for i in xlist]
+keys = list(probtransdict.keys()))
+plt.bar(reslist, probtransdict.values())
+plt.show()
 
 # Unrelated:
-# 6. Flatten a nested list
+# 7. Flatten a nested list
 # Cool intro python resources:
 # https://thomas-cokelaer.info/tutorials/python/index.html
