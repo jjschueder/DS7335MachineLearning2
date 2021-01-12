@@ -290,7 +290,16 @@ pairlist = list(paircounter)
 #pairarray = np.array(pairdict)
 #npsquare = np.square(pairarray)
 # 8. Make 10 business questions related to the questions we asked above.
-
+#1.If I order one color how likely am I to also order another color?
+#2. What are the most popular color combinations?
+#3. Which colors should I stop selling?
+#4. Which colors do I need to keep less stock of?
+#5. What are all my color offerings?
+#6. What was my biggest order?
+#7. How many combinations of 2 colors can I sell?
+#8. How many combinations of 3 colors can I sell?
+#9. Are there any colors that have never sold together?
+#10. Is white a good color to keep selling?
 
 
 dead_men_tell_taies = ['Four score and seven years ago our fathers brought forth on this',
