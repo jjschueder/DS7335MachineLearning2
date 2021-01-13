@@ -384,5 +384,8 @@ plt.show()
 
 # Unrelated:
 # 7. Flatten a nested list
+L = ['a', ['bb', ['ccc', 'ddd'], 'ee', 'ff'], 'g', 'h']
+merged = list(itertools.chain.from_iterable(L))
+merged2 = list(itertools.chain.from_iterable(merged))
 # Cool intro python resources:
 # https://thomas-cokelaer.info/tutorials/python/index.html
