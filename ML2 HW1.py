@@ -40,8 +40,10 @@ thislist.index("cherry")
 #is at position 2, so starting at position 1 finds the value, while starting at 3 does not.
 
 thislist.index("cherry", 1)
-
-thislist.index("cherry", 3)
+try:
+    thislist.index("cherry", 3)
+except:
+    print("value not in list")    
 # insert()position
 #Adds a value to a list at the specified position.
 thislist.insert(2, "watermelon")
@@ -276,8 +278,8 @@ denominator= sum(pairdict.values())
 
 probdict = {'color':'prob'}
 for k, v in pairdict.items():
-    print ('k:',k)
-    print ('v', v)
+#    print ('k:',k)
+#    print ('v', v)
     percent = v / denominator * 100
     print(percent)
     d = {k:percent}
@@ -347,8 +349,8 @@ letter_count_dict = dict(letter_counts)
 #probdictdead = {'letter':'prob'}
 probdictdead = {}
 for k, v in letter_count_dict.items():
-    print ('k:',k)
-    print ('v', v)
+#    print ('k:',k)
+#    print ('v', v)
     percent = v / denominator * 100
     print(percent)
     d = {k:percent}
@@ -361,8 +363,8 @@ denominator = sum(trans.values())
 
 probtransdict = {}
 for k, v in trans.items():
-    print ('k:',k)
-    print ('v', v)
+#    print ('k:',k)
+#    print ('v', v)
     percent = v / denominator * 100
     print(percent)
     d = {k:percent}
