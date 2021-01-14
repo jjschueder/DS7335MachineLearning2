@@ -20,6 +20,21 @@ from sklearn.model_selection import KFold
 # 1. Write a function to take a list or dictionary of clfs and hypers(i.e. use logistic regression), each with 3 different sets of hyper parameters for each
 # 2. Expand to include larger number of classifiers and hyperparameter settings
 # 3. Find some simple data
+
+
+# importing module  
+import csv 
+import urllib2
+
+url = 'https://raw.githubusercontent.com/jjschueder/DS7335MachineLearning2/main/Iris.csv'
+response = urllib2.urlopen(url)
+cr = csv.reader(response)  
+# opening the file using "with" 
+# statement 
+with open(open(filename, 'r') as data:      
+    for line in csv.DictReader(data): 
+        print(line) 
+
 # 4. generate matplotlib plots that will assist in identifying the optimal clf and parampters settings
 # 5. Please set up your code to be run and save the results to the directory that its executed from
 # 6. Investigate grid search function
