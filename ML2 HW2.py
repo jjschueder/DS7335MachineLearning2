@@ -14,6 +14,8 @@ Created on Wed Jan 13 19:55:46 2021
 import numpy as np
 from sklearn.metrics import accuracy_score # other metrics too pls!
 from sklearn.ensemble import RandomForestClassifier # more!
+from sklearn.ensemble import AdaBoostClassifier
+from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import KFold
 # importing module  
 import csv 
@@ -23,6 +25,19 @@ import io
 
 # adapt this code below to run your analysis
 # 1. Write a function to take a list or dictionary of clfs and hypers(i.e. use logistic regression), each with 3 different sets of hyper parameters for each
+#https://scikit-learn.org/stable/auto_examples/classification/plot_classifier_comparison.html
+names = ["Nearest Neighbors", "Random Forest",
+         "Ada Boost"]
+
+classifiers = [
+    KNeighborsClassifier,
+    #(3),
+    RandomForestClassifier,
+    #(max_depth=5, n_estimators=10, max_features=1),   
+    AdaBoostClassifier,
+    #(n_estimators=100, random_state=0),
+   ]
+
 # 2. Expand to include larger number of classifiers and hyperparameter settings
 # 3. Find some simple data
 
@@ -37,7 +52,7 @@ def get_dict_wo_key(dictionary, keyp):
     return _dict
 
 
-
+#Get data set from github
 mylist = []
 r = requests.get(url)
 buff = io.StringIO(r.text)
@@ -46,8 +61,8 @@ for row in dr:
     print(row)
     mylist.append(dict(row))
     
-for d in mylist:
-    print(d['Species'])
+# for d in mylist:
+#     print(d['Species'])
 
 
 yremovals = ['Id', 'SepalLengthCm', 'SepalWidthCm', 'PetalLengthCm', 'PetalWidthCm']
@@ -96,7 +111,7 @@ def run(a_clf, data, clf_hyper={}):
   ret = {} # classic explication of results
 
   for ids, (train_index, test_index) in enumerate(kf.split(M, L)):
-    clf = a_clf(**clf_hyper) # unpack parameters into clf is they exist
+    clf = a_clf(**clf_hyper) # unpack parameters into clf if they exist
     clf.fit(M[train_index], L[train_index])
     pred = clf.predict(M[test_index])
     ret[ids]= {'clf': clf,
@@ -108,4 +123,7 @@ def run(a_clf, data, clf_hyper={}):
 #results = run(RandomForestClassifier, data, clf_hyper={})
 #LongLongLiveGridS#LongLon#LLongLiveGridSearch!gLiveGridSearch!
 data_iris = (XM, YL.ravel(), n_folds)
-results_iris = run(RandomForestClassifier, data_iris, clf_hyper={})
+results_iris_all = []
+for name, clf in zip(names, classifiers):
+    results_iris = run(clf, data_iris, clf_hyper={})
+    results_iris_all.append(results_iris)
