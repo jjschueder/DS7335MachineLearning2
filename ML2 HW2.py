@@ -16,6 +16,7 @@ from sklearn.metrics import accuracy_score # other metrics too pls!
 from sklearn.ensemble import RandomForestClassifier # more!
 from sklearn.ensemble import AdaBoostClassifier
 from sklearn.neighbors import KNeighborsClassifier
+
 from sklearn.model_selection import KFold
 # importing module  
 import csv 
@@ -32,12 +33,41 @@ names = ["Nearest Neighbors", "Random Forest",
 classifiers = [
     KNeighborsClassifier,
     #(3),
+#class sklearn.neighbors.KNeighborsClassifier(n_neighbors=5, *, weights='uniform', algorithm='auto', leaf_size=30, p=2, metric='minkowski', metric_params=None, n_jobs=None, **kwargs)    
     RandomForestClassifier,
     #(max_depth=5, n_estimators=10, max_features=1),   
+#class sklearn.ensemble.RandomForestClassifier(n_estimators=100, *, criterion='gini', max_depth=None, min_samples_split=2, min_samples_leaf=1, min_weight_fraction_leaf=0.0, max_features='auto', max_leaf_nodes=None, min_impurity_decrease=0.0, min_impurity_split=None, bootstrap=True, oob_score=False, n_jobs=None, random_state=None, verbose=0, warm_start=False, class_weight=None, ccp_alpha=0.0, max_samples=None)    
     AdaBoostClassifier,
     #(n_estimators=100, random_state=0),
+#class sklearn.ensemble.AdaBoostClassifier(base_estimator=None, *, n_estimators=50, learning_rate=1.0, algorithm='SAMME.R', random_state=None)    
    ]
 
+knn_param_grid = [
+    {
+         'weights': ['uniform','distance'],
+         'leaf_size': [5,10],
+         'metric': ['minkowski','euclidean'],
+         'n_neighbors':[2,3,5],
+         'random_state': [101]
+         
+    }
+]
+
+
+rf_param_grid = [
+    {
+         'n_estimators': [200, 500], 
+         'max_depth': [20,30,35],
+         'random_state':[101]
+     }
+]
+
+
+ada_param_grid = { 'n_estimators': [50, 100, 200, 500]
+              ,'random_state': [101]
+              ,'learning_rate':[0]
+              
+             }
 # 2. Expand to include larger number of classifiers and hyperparameter settings
 # 3. Find some simple data
 
