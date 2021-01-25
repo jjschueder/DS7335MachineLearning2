@@ -256,14 +256,16 @@ def main():
             print('Sorry that classifier is not defined')
         
         #find the best one
-        
-        results_iris_all
-        seq = [x['avg_acc'] for x in results_iris_all]
-        min(seq)
-        max(seq)
+    
         
         maxaccItem = max(results_iris_all, key=lambda x:x['avg_acc'])
         minaccItem = min(results_iris_all, key=lambda x:x['avg_acc'])
+        
+        #To do
+        #add other accuracy metrics
+        #add charts
+        #do best by classifier
+        #save results
 # 4. generate matplotlib plots that will assist in identifying the optimal clf and parampters settings
 # 5. Please set up your code to be run and save the results to the directory that its executed from
 
