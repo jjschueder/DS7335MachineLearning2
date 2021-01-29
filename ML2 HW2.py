@@ -268,7 +268,9 @@ def main():
         #save results
 # 4. generate matplotlib plots that will assist in identifying the optimal clf and parampters settings
 # 5. Please set up your code to be run and save the results to the directory that its executed from
-
+        import json
+        with open('gridresults', 'w') as fout:
+            json.dump(results_iris_all, fout)
     
 if __name__ == "__main__":
     # output_dir = '/usr/lfs/v1/data/ServiceTech/temp'
