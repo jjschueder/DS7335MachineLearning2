@@ -12,34 +12,42 @@ Created on Wed Jan 13 19:55:46 2021
 # ==============================================================================
 
 import numpy as np
-from sklearn.metrics import accuracy_score # other metrics too pls!
+from sklearn.metrics import accuracy_score, roc_auc_score, precision_score, recall_score # other metrics too pls!
+from sklearn.metrics import classification_report
+#from sklearn.metrics import cross_validate
 from sklearn.ensemble import RandomForestClassifier # more!
 from sklearn.ensemble import AdaBoostClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from collections import Counter
 from itertools import *
 from sklearn.model_selection import KFold
+from sklearn.model_selection import StratifiedKFold
 # importing module  
 import csv 
 import urllib.request
 import requests 
 import io
 
-bclf = clf(**param)
+#bclf = clf(**param)
 
 def run(a_clf, data, clf_hyper):
   M, L, n_folds = data # unpack data container
-  kf = KFold(n_splits=n_folds) # Establish the cross validation
+  #kf = KFold(n_splits=n_folds) # Establish the cross validation
+  skf = StratifiedKFold(n_splits=n_folds)
   ret = {} # classic explication of results
 
-  for ids, (train_index, test_index) in enumerate(kf.split(M, L)):
+  for ids, (train_index, test_index) in enumerate(skf.split(M, L)):
     clf = a_clf(**clf_hyper) # unpack parameters into clf if they exist
     clf.fit(M[train_index], L[train_index])
     pred = clf.predict(M[test_index])
+    predproba = clf.predict_proba(M[test_index])
     ret[ids]= {'clf': clf,
                'train_index': train_index,
                'test_index': test_index,
-               'accuracy': accuracy_score(L[test_index], pred)}
+               'accuracy': accuracy_score(L[test_index], pred),
+               'precision': precision_score(L[test_index], pred,  average='weighted'),
+               'recall' : recall_score(L[test_index], pred,  average='weighted'),
+               'roc_auc' : roc_auc_score(L[test_index], predproba, average='weighted', multi_class='ovo')}
   return ret
 
 def get_dict_wo_key(dictionary, keyp):
@@ -200,13 +208,13 @@ def main():
 # Call grid search with data and classifier parameters 
 # 6. Investigate grid search function
 # ==============================================================================      
-    results = run(RandomForestClassifier, data, clf_hyper={})
-    results = run(clf, data_iris, clf_hyper=param)
+    #results = run(RandomForestClassifier, data, clf_hyper={})
+    #results = run(clf, data_iris, clf_hyper=param)
     sumacc = 0
-    for k, v in results.items():
-        print(v['accuracy'])
-        sumacc += v['accuracy']
-        avg_acc = sumacc/n_folds
+#    for k, v in results.items():
+#        print(v['accuracy'])
+#        sumacc += v['accuracy']
+#        avg_acc = sumacc/n_folds
     #LongLongLiveGridS#LongLon#LLongLiveGridSearch!gLiveGridSearch!
     n_folds = 5
     data_iris = (XMFL, YLE.ravel(), n_folds)
@@ -224,7 +232,7 @@ def main():
                     avg_acc = sumacc/n_folds
                     acc = {}
                     acc.update({'avg_acc' : avg_acc})
-                res = {**results_iris, **param, **modelname, **acc}
+                res = {**param, **modelname, **acc}
                 results_iris_all.append(res)
         elif name == 'Random Forest':
            for param in rfcombos: 
@@ -237,7 +245,7 @@ def main():
                     avg_acc = sumacc/n_folds
                     acc = {}
                     acc.update({'avg_acc' : avg_acc})
-               res = {**results_iris, **param, **modelname, **acc}
+               res = {**param, **modelname, **acc}
                results_iris_all.append(res)
         elif name == 'Ada Boost':
            for param in adacombos:
@@ -250,7 +258,7 @@ def main():
                     avg_acc = sumacc/n_folds
                     acc = {}
                     acc.update({'avg_acc' : avg_acc})
-                res = {**results_iris, **param, **modelname, **acc}
+                res = {**param, **modelname, **acc}
                 results_iris_all.append(res)
         else:
             print('Sorry that classifier is not defined')
