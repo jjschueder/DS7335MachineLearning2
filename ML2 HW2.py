@@ -210,7 +210,25 @@ def main():
 # ==============================================================================      
     #results = run(RandomForestClassifier, data, clf_hyper={})
     #results = run(clf, data_iris, clf_hyper=param)
-    sumacc = 0
+    
+    def get_avg_results(results, n_folds):
+                sumacc, avg_acc, sumrec, avg_rec, sumprec, avg_prec, sumrocauc, avg_rocauc = 0,0,0,0,0,0,0,0
+                for k, v in results.items():
+                    print(v['accuracy'])
+                    sumacc+= v['accuracy']
+                    sumrec += v['recall']
+                    sumprec += v['precision']
+                    sumrocauc += v['roc_auc']
+                avg_acc = sumacc/n_folds
+                avg_rec = sumrec/n_folds
+                avg_prec = sumprec/n_folds
+                avg_rocauc = sumrocauc/n_folds
+                acc = {}
+                acc.update({'avg_acc' : avg_acc, 'avg_rec' : avg_rec, 'avg_prec' : avg_prec, 'avg_rocauc': avg_rocauc})
+                return acc
+    
+    sumaccv= 0
+    sumrec = 0
 #    for k, v in results.items():
 #        print(v['accuracy'])
 #        sumacc += v['accuracy']
@@ -225,39 +243,21 @@ def main():
             for param in knncombos:
                 results_iris = run(clf, data_iris, clf_hyper=param)
                 modelname = {'name': 'knn'}
-                sumacc, avg_acc = 0,0
-                for k, v in results_iris.items():
-                    print(v['accuracy'])
-                    sumacc += v['accuracy']
-                    avg_acc = sumacc/n_folds
-                    acc = {}
-                    acc.update({'avg_acc' : avg_acc})
+                acc = get_avg_results(results_iris, n_folds)
                 res = {**param, **modelname, **acc}
                 results_iris_all.append(res)
         elif name == 'Random Forest':
            for param in rfcombos: 
                results_iris = run(clf, data_iris, clf_hyper=param)
                modelname = {'name': 'rf'}
-               sumacc, avg_acc = 0,0
-               for k, v in results_iris.items():
-                    print(v['accuracy'])
-                    sumacc += v['accuracy']
-                    avg_acc = sumacc/n_folds
-                    acc = {}
-                    acc.update({'avg_acc' : avg_acc})
+               acc = get_avg_results(results_iris, n_folds)
                res = {**param, **modelname, **acc}
                results_iris_all.append(res)
         elif name == 'Ada Boost':
            for param in adacombos:
                 results_iris = run(clf, data_iris, clf_hyper=param)
                 modelname = {'name': 'ada'}
-                sumacc, avg_acc = 0,0
-                for k, v in results_iris.items():
-                    print(v['accuracy'])
-                    sumacc += v['accuracy']
-                    avg_acc = sumacc/n_folds
-                    acc = {}
-                    acc.update({'avg_acc' : avg_acc})
+                acc = get_avg_results(results_iris, n_folds)
                 res = {**param, **modelname, **acc}
                 results_iris_all.append(res)
         else:
