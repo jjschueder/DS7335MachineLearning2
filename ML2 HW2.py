@@ -267,6 +267,9 @@ def main():
     
         
         maxaccItem = max(results_iris_all, key=lambda x:x['avg_acc'])
+        
+        maxroc_aucItem = max(results_iris_all, key=lambda x:x['avg_rocauc'])
+        
         minaccItem = min(results_iris_all, key=lambda x:x['avg_acc'])
         
         #To do
