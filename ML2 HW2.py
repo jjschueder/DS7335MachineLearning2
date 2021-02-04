@@ -28,6 +28,13 @@ import urllib.request
 import requests 
 import io
 
+import os
+
+os.environ['http_proxy'] = 'http://proxy.rockwellcollins.com:9090'
+os.environ['HTTPS_PROXY'] = 'http://proxy.rockwellcollins.com:9090'
+os.environ['https_proxy'] = 'http://proxy.rockwellcollins.com:9090'
+
+
 #bclf = clf(**param)
 
 def run(a_clf, data, clf_hyper):
@@ -72,20 +79,23 @@ def permute_grid(grid):
                     result.append(params)
     return result
 
-def do_grid_search():
-    #loop at permutations
-    
-    #call run
-    
-    #append results to dictionary
-    result = 'blah'
-    return result
-    
-def evaluate_result_dictionary():
-    result = 'blah'
-    return result
+
     #compare accuracy/precision/recall on all algorithms/parmeters
-    
+def get_avg_results(results, n_folds):
+                sumacc, avg_acc, sumrec, avg_rec, sumprec, avg_prec, sumrocauc, avg_rocauc = 0,0,0,0,0,0,0,0
+                for k, v in results.items():
+                    print(v['accuracy'])
+                    sumacc+= v['accuracy']
+                    sumrec += v['recall']
+                    sumprec += v['precision']
+                    sumrocauc += v['roc_auc']
+                avg_acc = sumacc/n_folds
+                avg_rec = sumrec/n_folds
+                avg_prec = sumprec/n_folds
+                avg_rocauc = sumrocauc/n_folds
+                acc = {}
+                acc.update({'avg_acc' : avg_acc, 'avg_rec' : avg_rec, 'avg_prec' : avg_prec, 'avg_rocauc': avg_rocauc})
+                return acc    
     #pick best option
     
 # adapt this code below to run your analysis
@@ -208,35 +218,13 @@ def main():
 # Call grid search with data and classifier parameters 
 # 6. Investigate grid search function
 # ==============================================================================      
-    #results = run(RandomForestClassifier, data, clf_hyper={})
-    #results = run(clf, data_iris, clf_hyper=param)
-    
-    def get_avg_results(results, n_folds):
-                sumacc, avg_acc, sumrec, avg_rec, sumprec, avg_prec, sumrocauc, avg_rocauc = 0,0,0,0,0,0,0,0
-                for k, v in results.items():
-                    print(v['accuracy'])
-                    sumacc+= v['accuracy']
-                    sumrec += v['recall']
-                    sumprec += v['precision']
-                    sumrocauc += v['roc_auc']
-                avg_acc = sumacc/n_folds
-                avg_rec = sumrec/n_folds
-                avg_prec = sumprec/n_folds
-                avg_rocauc = sumrocauc/n_folds
-                acc = {}
-                acc.update({'avg_acc' : avg_acc, 'avg_rec' : avg_rec, 'avg_prec' : avg_prec, 'avg_rocauc': avg_rocauc})
-                return acc
-    
-    sumaccv= 0
-    sumrec = 0
-#    for k, v in results.items():
-#        print(v['accuracy'])
-#        sumacc += v['accuracy']
-#        avg_acc = sumacc/n_folds
+
     #LongLongLiveGridS#LongLon#LLongLiveGridSearch!gLiveGridSearch!
     n_folds = 5
     data_iris = (XMFL, YLE.ravel(), n_folds)
     results_iris_all = []
+    print("names:", names)
+    print("classifiers", classifiers)
     for name, clf in zip(names, classifiers):
         print (name, clf)
         if name == 'Nearest Neighbors':
@@ -263,25 +251,13 @@ def main():
         else:
             print('Sorry that classifier is not defined')
         
-        #find the best one
-    
-        
-        maxaccItem = max(results_iris_all, key=lambda x:x['avg_acc'])
-        
-        maxroc_aucItem = max(results_iris_all, key=lambda x:x['avg_rocauc'])
-        
-        minaccItem = min(results_iris_all, key=lambda x:x['avg_acc'])
-        
-        #To do
-        #add other accuracy metrics
-        #add charts
-        #do best by classifier
-        #save results
-# 4. generate matplotlib plots that will assist in identifying the optimal clf and parampters settings
-# 5. Please set up your code to be run and save the results to the directory that its executed from
-        import json
-        with open('gridresults', 'w') as fout:
-            json.dump(results_iris_all, fout)
+       
+            
+    return results_iris_all
+
+def scorer(results, metric):
+    maxout =  max(results, key=lambda x:x[metric])
+    return maxout
     
 if __name__ == "__main__":
     # output_dir = '/usr/lfs/v1/data/ServiceTech/temp'
@@ -290,4 +266,21 @@ if __name__ == "__main__":
     # _, _, sn_set = sap.collect_data()
     # tdms = TdmsDataCollection(pn, output_dir, sn_set=sn_set)
     # tdms_data = tdms.collect_data()
-    main()
+    mainout = main()
+    
+     
+
+
+
+#find the best one        
+    maxscore = scorer(mainout, 'avg_rocauc')
+    #could use avg_acc, etc
+    
+# 4. generate matplotlib plots that will assist in identifying the optimal clf and parampters settings
+
+
+    
+# 5. Please set up your code to be run and save the results to the directory that its executed from
+    import json
+    with open('gridresults', 'w') as fout:
+            json.dump(mainout, fout)        
