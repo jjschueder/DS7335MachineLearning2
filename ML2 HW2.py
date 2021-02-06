@@ -30,9 +30,9 @@ import io
 
 import os
 
-os.environ['http_proxy'] = 'http://proxy.rockwellcollins.com:9090'
-os.environ['HTTPS_PROXY'] = 'http://proxy.rockwellcollins.com:9090'
-os.environ['https_proxy'] = 'http://proxy.rockwellcollins.com:9090'
+#os.environ['http_proxy'] = 'http://proxy.rockwellcollins.com:9090'
+#os.environ['HTTPS_PROXY'] = 'http://proxy.rockwellcollins.com:9090'
+#os.environ['https_proxy'] = 'http://proxy.rockwellcollins.com:9090'
 
 
 #bclf = clf(**param)
@@ -278,7 +278,12 @@ if __name__ == "__main__":
     
 # 4. generate matplotlib plots that will assist in identifying the optimal clf and parampters settings
 
-
+    keyValList = ['knn']
+    knnout = [d for d in mainout if d['name'] in keyValList]
+    keyValList = ['rf']
+    rfout = [d for d in mainout if d['name'] in keyValList]
+    keyValList = ['ada']
+    adaout = [d for d in mainout if d['name'] in keyValList]
     
 # 5. Please set up your code to be run and save the results to the directory that its executed from
     import json
