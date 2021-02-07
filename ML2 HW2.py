@@ -102,7 +102,7 @@ def get_avg_results(results, n_folds):
 # 1. Write a function to take a list or dictionary of clfs and hypers(i.e. use logistic regression), each with 3 different sets of hyper parameters for each
 #https://scikit-learn.org/stable/auto_examples/classification/plot_classifier_comparison.html
 
-def main():
+def main(XMFL, YLE):
 # ==============================================================================
 # Intitialize the classifier parameters   
 # ==============================================================================    
@@ -154,7 +154,99 @@ def main():
     knncombos = permute_grid(knn_param_grid)
     rfcombos = permute_grid(rf_param_grid)
     adacombos = permute_grid(ada_param_grid)
+
+       
+
+    
+    #M = np.array([[1,2],[3,4],[4,5],[4,5],[4,5],[4,5],[4,5],[4,5]])
+    #L = np.ones(M.shape[0])
+    
 # ==============================================================================
+# Call grid search with data and classifier parameters 
+# 6. Investigate grid search function
+# ==============================================================================      
+
+    #LongLongLiveGridS#LongLon#LLongLiveGridSearch!gLiveGridSearch!
+    n_folds = 5
+    data_iris = (XMFL, YLE, n_folds)
+    results_iris_all = []
+    print("names:", names)
+    print("classifiers", classifiers)
+    for name, clf in zip(names, classifiers):
+        print (name, clf)
+        if name == 'Nearest Neighbors':
+            for param in knncombos:
+                results_iris = run(clf, data_iris, clf_hyper=param)
+                modelname = {'name': 'knn'}
+                acc = get_avg_results(results_iris, n_folds)
+                res = {**param, **modelname, **acc}
+                results_iris_all.append(res)
+        elif name == 'Random Forest':
+           for param in rfcombos: 
+               results_iris = run(clf, data_iris, clf_hyper=param)
+               modelname = {'name': 'rf'}
+               acc = get_avg_results(results_iris, n_folds)
+               res = {**param, **modelname, **acc}
+               results_iris_all.append(res)
+        elif name == 'Ada Boost':
+           for param in adacombos:
+                results_iris = run(clf, data_iris, clf_hyper=param)
+                modelname = {'name': 'ada'}
+                acc = get_avg_results(results_iris, n_folds)
+                res = {**param, **modelname, **acc}
+                results_iris_all.append(res)
+        else:
+            print('Sorry that classifier is not defined')
+        
+       
+            
+    return results_iris_all
+
+def scorer(results, metric):
+    maxout =  max(results, key=lambda x:x[metric])
+    return maxout
+
+def plot_multiclass_roc(clf, X_test, y_test, n_classes, figsize=(17, 6)):
+    from sklearn.metrics import roc_curve, auc
+    y_score = clf.predict_proba(X_test)
+
+    # structures
+    fpr = dict()
+    tpr = dict()
+    roc_auc = dict()
+    # Compute ROC curve and ROC area for each class
+    fpr = dict()
+    tpr = dict()
+    roc_auc = dict()
+    n_classes = 3
+    for i in range(n_classes):
+        print(i)
+        fpr[i], tpr[i], _ = roc_curve(y_test[:, i], y_score[:, i])
+        roc_auc[i] = auc(fpr[i], tpr[i])
+    
+    # Plot of a ROC curve for a specific class
+    for i in range(n_classes):
+        plt.figure()
+        plt.plot(fpr[i], tpr[i], label='ROC curve (area = %0.2f)' % roc_auc[i])
+        plt.plot([0, 1], [0, 1], 'k--')
+        plt.xlim([0.0, 1.0])
+        plt.ylim([0.0, 1.05])
+        plt.xlabel('False Positive Rate')
+        plt.ylabel('True Positive Rate')
+        plt.title('Receiver operating characteristic example')
+        plt.legend(loc="lower right")
+    
+    
+        plt.show()
+    
+if __name__ == "__main__":
+    # output_dir = '/usr/lfs/v1/data/ServiceTech/temp'
+    # pn='822-2332-100'
+    # sap = SapDataCollection(pn, output_dir)
+    # _, _, sn_set = sap.collect_data()
+    # tdms = TdmsDataCollection(pn, output_dir, sn_set=sn_set)
+    # tdms_data = tdms.collect_data()
+    # ==============================================================================
 # pull in a data set  
 # ==============================================================================      
         
@@ -204,69 +296,13 @@ def main():
     YL = np.array(Y) 
     # Import LabelEncoder
     from sklearn import preprocessing
+    from sklearn.preprocessing import label_binarize
     #creating labelEncoder
     le = preprocessing.LabelEncoder()
     # Converting string labels into numbers.
     YLE = le.fit_transform(YL)
-       
-
-    
-    #M = np.array([[1,2],[3,4],[4,5],[4,5],[4,5],[4,5],[4,5],[4,5]])
-    #L = np.ones(M.shape[0])
-    
-# ==============================================================================
-# Call grid search with data and classifier parameters 
-# 6. Investigate grid search function
-# ==============================================================================      
-
-    #LongLongLiveGridS#LongLon#LLongLiveGridSearch!gLiveGridSearch!
-    n_folds = 5
-    data_iris = (XMFL, YLE.ravel(), n_folds)
-    results_iris_all = []
-    print("names:", names)
-    print("classifiers", classifiers)
-    for name, clf in zip(names, classifiers):
-        print (name, clf)
-        if name == 'Nearest Neighbors':
-            for param in knncombos:
-                results_iris = run(clf, data_iris, clf_hyper=param)
-                modelname = {'name': 'knn'}
-                acc = get_avg_results(results_iris, n_folds)
-                res = {**param, **modelname, **acc}
-                results_iris_all.append(res)
-        elif name == 'Random Forest':
-           for param in rfcombos: 
-               results_iris = run(clf, data_iris, clf_hyper=param)
-               modelname = {'name': 'rf'}
-               acc = get_avg_results(results_iris, n_folds)
-               res = {**param, **modelname, **acc}
-               results_iris_all.append(res)
-        elif name == 'Ada Boost':
-           for param in adacombos:
-                results_iris = run(clf, data_iris, clf_hyper=param)
-                modelname = {'name': 'ada'}
-                acc = get_avg_results(results_iris, n_folds)
-                res = {**param, **modelname, **acc}
-                results_iris_all.append(res)
-        else:
-            print('Sorry that classifier is not defined')
-        
-       
-            
-    return results_iris_all
-
-def scorer(results, metric):
-    maxout =  max(results, key=lambda x:x[metric])
-    return maxout
-    
-if __name__ == "__main__":
-    # output_dir = '/usr/lfs/v1/data/ServiceTech/temp'
-    # pn='822-2332-100'
-    # sap = SapDataCollection(pn, output_dir)
-    # _, _, sn_set = sap.collect_data()
-    # tdms = TdmsDataCollection(pn, output_dir, sn_set=sn_set)
-    # tdms_data = tdms.collect_data()
-    mainout = main()
+    YLBIN = label_binarize(YLE, classes=[0, 1, 2])
+    mainout = main(XMFL, YLE.ravel())
     
      
 
@@ -284,6 +320,90 @@ if __name__ == "__main__":
     rfout = [d for d in mainout if d['name'] in keyValList]
     keyValList = ['ada']
     adaout = [d for d in mainout if d['name'] in keyValList]
+    
+    maxknn = scorer(knnout, 'avg_rocauc')
+    maxada = scorer(adaout, 'avg_rocauc')
+    
+    from sklearn.multiclass import OneVsRestClassifier
+    from sklearn.model_selection import cross_val_predict
+    from sklearn.model_selection import train_test_split
+    from sklearn.model_selection import cross_val_predict
+    roc_list = []
+    lw = 2
+    X_train, X_test, y_train, y_test = train_test_split(X,YLBIN, test_size=0.2)
+# Learn to predict each class against the other
+    rfclassifiercv = OneVsRestClassifier(RandomForestClassifier(
+                        max_depth=20,
+                        n_estimators=200,
+                       random_state=101))
+    rfbinarymodel = rfclassifiercv.fit(X_train, y_train)
+    rfbinaryscore = rfclassifiercv.predict(X_test)
+    y_score = cross_val_predict(rfclassifiercv, X, YLBIN, cv=10 ,method='predict_proba')
+
+    # Compute ROC curve and ROC area for each class
+    fpr = dict()
+    tpr = dict()
+    roc_auc = dict()
+    for i in range(n_classes):
+        fpr[i], tpr[i], _ = roc_curve(YLBIN[:, i], y_score[:, i])
+        roc_auc[i] = auc(fpr[i], tpr[i])
+    
+    # Compute micro-average ROC curve and ROC area
+    fpr["micro"], tpr["micro"], _ = roc_curve(YLBIN.ravel(), y_score.ravel())
+    roc_auc["micro"] = auc(fpr["micro"], tpr["micro"])
+
+
+    from scipy import interp
+    from itertools import cycle
+    # First aggregate all false positive rates
+    all_fpr = np.unique(np.concatenate([fpr[i] for i in range(n_classes)]))
+    
+    # Then interpolate all ROC curves at this points
+    mean_tpr = np.zeros_like(all_fpr)
+    for i in range(n_classes):
+        mean_tpr += interp(all_fpr, fpr[i], tpr[i])
+    
+    # Finally average it and compute AUC
+    mean_tpr /= n_classes
+    
+    fpr["macro"] = all_fpr
+    tpr["macro"] = mean_tpr
+    roc_auc["macro"] = auc(fpr["macro"], tpr["macro"])
+    roc_list.append(("Model 2", "RF", roc_auc["macro"],fpr["macro"],tpr["macro"]))
+    # Plot all ROC curves
+    plt.figure()
+    plt.plot(fpr["micro"], tpr["micro"],
+             label='micro-average ROC curve (area = {0:0.2f})'
+                   ''.format(roc_auc["micro"]),
+             color='deeppink', linestyle=':', linewidth=4)
+    
+    plt.plot(fpr["macro"], tpr["macro"],
+             label='macro-average ROC curve (area = {0:0.2f})'
+                   ''.format(roc_auc["macro"]),
+             color='navy', linestyle=':', linewidth=4)
+    
+    colors = cycle(['aqua', 'darkorange', 'cornflowerblue'])
+    for i, color in zip(range(n_classes), colors):
+        plt.plot(fpr[i], tpr[i], color=color, lw=lw,
+                 label='ROC curve of class {0} (area = {1:0.2f})'
+                 ''.format(i, roc_auc[i]))
+    
+    plt.plot([0, 1], [0, 1], 'k--', lw=lw)
+    plt.xlim([0.0, 1.0])
+    plt.ylim([0.0, 1.05])
+    plt.xlabel('False Positive Rate')
+    plt.ylabel('True Positive Rate')
+    plt.title('Some extension of Receiver operating characteristic to multi-class')
+    plt.legend(loc="lower right")
+    plt.rcParams["figure.figsize"] = (10,10)
+    plt.show()
+    
+    numclasses = len(np.unique(YLE))
+    # classifier
+    
+    plot_multiclass_roc(clf, X_test, y_test, n_classes=numclasses, figsize=(16, 10))
+    
+
     
 # 5. Please set up your code to be run and save the results to the directory that its executed from
     import json
