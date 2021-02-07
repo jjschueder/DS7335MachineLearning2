@@ -211,14 +211,12 @@ def plot_multiclass_roc(clf, X_test, y_test, n_classes, figsize=(17, 6)):
     from sklearn.model_selection import cross_val_predict
     from sklearn.model_selection import train_test_split
     from sklearn.model_selection import cross_val_predict
+    from sklearn.metrics import roc_curve
     roc_list = []
     lw = 2
     X_train, X_test, y_train, y_test = train_test_split(X,YLBIN, test_size=0.2)
 # Learn to predict each class against the other
-    rfclassifiercv = OneVsRestClassifier(RandomForestClassifier(
-                        max_depth=20,
-                        n_estimators=200,
-                       random_state=101))
+    rfclassifiercv = OneVsRestClassifier(clf)
     rfbinarymodel = rfclassifiercv.fit(X_train, y_train)
     rfbinaryscore = rfclassifiercv.predict(X_test)
     y_score = cross_val_predict(rfclassifiercv, X, YLBIN, cv=10 ,method='predict_proba')
@@ -368,6 +366,11 @@ if __name__ == "__main__":
     
 
     # classifier
+    clf = RandomForestClassifier(
+                        max_depth=20,
+                        n_estimators=200,
+                       random_state=101)
+    numclasses = 3
     
     plot_multiclass_roc(clf, X, YLBIN, n_classes=numclasses, figsize=(16, 10))
     
