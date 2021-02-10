@@ -210,8 +210,8 @@ def plot_multiclass_roc(clf, X_test, y_test, n_classes, figsize=(17, 6)):
     from sklearn.multiclass import OneVsRestClassifier
     from sklearn.model_selection import cross_val_predict
     from sklearn.model_selection import train_test_split
-    from sklearn.model_selection import cross_val_predict
-    from sklearn.metrics import roc_curve
+    from sklearn.metrics import accuracy_score, confusion_matrix, roc_auc_score, auc, roc_curve
+    import matplotlib.pyplot as plt
     roc_list = []
     lw = 2
     X_train, X_test, y_train, y_test = train_test_split(X,YLBIN, test_size=0.2)
@@ -365,7 +365,7 @@ if __name__ == "__main__":
     maxada = scorer(adaout, 'avg_rocauc')
     
 
-    # classifier
+    # classifier winner 
     clf = RandomForestClassifier(
                         max_depth=20,
                         n_estimators=200,
