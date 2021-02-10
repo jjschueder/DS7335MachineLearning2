@@ -11,6 +11,11 @@ Created on Wed Jan 13 19:55:46 2021
 # File Created: Jan 13, 2021
 # ==============================================================================
 
+
+# ==============================================================================
+# packages
+# ==============================================================================
+
 import numpy as np
 from sklearn.metrics import accuracy_score, roc_auc_score, precision_score, recall_score # other metrics too pls!
 from sklearn.metrics import classification_report
@@ -27,16 +32,32 @@ import csv
 import urllib.request
 import requests 
 import io
-
+from sklearn.multiclass import OneVsRestClassifier
+from sklearn.model_selection import cross_val_predict
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score, confusion_matrix, roc_auc_score, auc, roc_curve
+import matplotlib.pyplot as plt
 import os
+import json
 
-#os.environ['http_proxy'] = 'http://proxy.rockwellcollins.com:9090'
-#os.environ['HTTPS_PROXY'] = 'http://proxy.rockwellcollins.com:9090'
-#os.environ['https_proxy'] = 'http://proxy.rockwellcollins.com:9090'
+# Import LabelEncoder
+from sklearn import preprocessing
+from sklearn.preprocessing import label_binarize
+
+
 
 
 #bclf = clf(**param)
 
+# ==============================================================================
+# functions
+# ==============================================================================
+
+
+
+# ==============================================================================
+# runs specified classifier with data and hyper parmaters provided
+# ==============================================================================
 def run(a_clf, data, clf_hyper):
   M, L, n_folds = data # unpack data container
   #kf = KFold(n_splits=n_folds) # Establish the cross validation
@@ -65,6 +86,9 @@ def get_dict_wo_key(dictionary, keyp):
         del _dict[key]
     return _dict
 
+# ==============================================================================
+# gets permutations of classifiers and hyperparameters
+# ==============================================================================
 def permute_grid(grid):
     result = []
     for p in grid:
@@ -80,7 +104,9 @@ def permute_grid(grid):
     return result
 
 
-    #compare accuracy/precision/recall on all algorithms/parmeters
+# ==============================================================================
+# gets average evaluation metrics n_folds
+# ==============================================================================
 def get_avg_results(results, n_folds):
                 sumacc, avg_acc, sumrec, avg_rec, sumprec, avg_prec, sumrocauc, avg_rocauc = 0,0,0,0,0,0,0,0
                 for k, v in results.items():
@@ -102,6 +128,10 @@ def get_avg_results(results, n_folds):
 # 1. Write a function to take a list or dictionary of clfs and hypers(i.e. use logistic regression), each with 3 different sets of hyper parameters for each
 #https://scikit-learn.org/stable/auto_examples/classification/plot_classifier_comparison.html
 
+
+# ==============================================================================
+# main
+# ==============================================================================
 def main(XMFL, YLE):
 # ==============================================================================
 # Intitialize the classifier parameters   
@@ -149,7 +179,9 @@ def main(XMFL, YLE):
     # 2. Expand to include larger number of classifiers and hyperparameter settings
     # 3. Find some simple data
 
-    
+# ==============================================================================
+# call functions to get permutations of classifiers and hyperparameters
+# ==============================================================================    
     
     knncombos = permute_grid(knn_param_grid)
     rfcombos = permute_grid(rf_param_grid)
@@ -206,12 +238,12 @@ def scorer(results, metric):
     maxout =  max(results, key=lambda x:x[metric])
     return maxout
 
+
+# ==============================================================================
+# plot curves of best result
+# ==============================================================================
 def plot_multiclass_roc(clf, X_test, y_test, n_classes, figsize=(17, 6)):
-    from sklearn.multiclass import OneVsRestClassifier
-    from sklearn.model_selection import cross_val_predict
-    from sklearn.model_selection import train_test_split
-    from sklearn.metrics import accuracy_score, confusion_matrix, roc_auc_score, auc, roc_curve
-    import matplotlib.pyplot as plt
+
     roc_list = []
     lw = 2
     X_train, X_test, y_train, y_test = train_test_split(X,YLBIN, test_size=0.2)
@@ -277,16 +309,13 @@ def plot_multiclass_roc(clf, X_test, y_test, n_classes, figsize=(17, 6)):
     plt.title('Some extension of Receiver operating characteristic to multi-class')
     plt.legend(loc="lower right")
     plt.rcParams["figure.figsize"] = (10,10)
-    plt.show()
+    #plt.savefig('bestresultgraph.png')
+    #plt.show()
+    plt.savefig('bestresultgraph.png')
     
 if __name__ == "__main__":
-    # output_dir = '/usr/lfs/v1/data/ServiceTech/temp'
-    # pn='822-2332-100'
-    # sap = SapDataCollection(pn, output_dir)
-    # _, _, sn_set = sap.collect_data()
-    # tdms = TdmsDataCollection(pn, output_dir, sn_set=sn_set)
-    # tdms_data = tdms.collect_data()
-    # ==============================================================================
+
+# ==============================================================================
 # pull in a data set  
 # ==============================================================================      
         
@@ -334,9 +363,7 @@ if __name__ == "__main__":
     XM = np.array(X)
     XMFL = XM.astype(np.float64)
     YL = np.array(Y) 
-    # Import LabelEncoder
-    from sklearn import preprocessing
-    from sklearn.preprocessing import label_binarize
+
     #creating labelEncoder
     le = preprocessing.LabelEncoder()
     # Converting string labels into numbers.
@@ -352,7 +379,7 @@ if __name__ == "__main__":
     maxscore = scorer(mainout, 'avg_rocauc')
     #could use avg_acc, etc
     
-# 4. generate matplotlib plots that will assist in identifying the optimal clf and parampters settings
+
 
     keyValList = ['knn']
     knnout = [d for d in mainout if d['name'] in keyValList]
@@ -371,12 +398,12 @@ if __name__ == "__main__":
                         n_estimators=200,
                        random_state=101)
     numclasses = 3
-    
+# 4. generate matplotlib plots that will assist in identifying the optimal clf and parampters settings    
     plot_multiclass_roc(clf, X, YLBIN, n_classes=numclasses, figsize=(16, 10))
     
 
     
 # 5. Please set up your code to be run and save the results to the directory that its executed from
-    import json
-    with open('gridresults', 'w') as fout:
+    
+    with open('gridresults.json', 'w') as fout:
             json.dump(mainout, fout)        
