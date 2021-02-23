@@ -208,29 +208,56 @@ laurencomb = np.dot(peopleMatrix[3], restMatrix.T)
 firstwinner = np.argmax(laurencomb)
 winner = np.argwhere(laurencomb == np.amax(laurencomb))
 print(winner)
-print(orderedRests[firstwinner])
+print("Winner for Lauren: ", orderedRests[firstwinner])
 #laurentest = get_real_rank(np.dot(peopleMatrix[3], restMatrix.T))
 
 
 
 # Next, compute a new matrix (M_usr_x_rest  i.e. an user by restaurant) from all people.  
 #What does the a_ij matrix represent? 
+#people as columns, rest as columns
 linecomb = np.dot(peopleMatrix, restMatrix.T)
 
+#rest as rows, people as columns
+linecomb2 = np.dot(restMatrix, peopleMatrix.T)
+M_usr_x_rest  = linecomb2
 # Sum all columns in M_usr_x_rest to get the optimal restaurant for all users.  
 #What do the entries represent?
 
 favforall =sum(np.dot(peopleMatrix.T, restMatrix))
-allwinner = firstwinner = np.argmax(favforall)
-print(orderedRests[allwinner])
+allwinner  = np.argmax(favforall)
+print("Winner for all:", orderedRests[allwinner])
+
 # Now convert each row in the M_usr_x_rest into a ranking for each user and call it M_usr_x_rest_rank.   Do the same as above to generate the optimal restaurant choice.  
 
-# Why is there a difference between the two?  What problem arrives?  What does it represent in the real world?
+# def rank_simple(vector):
+#     return sorted(range(len(vector)), key=vector.__getitem__)
 
+# rankingbyuser = rank_simple(linecomb)
+import scipy.stats as ss
+ss.rankdata(linecomb)
+
+M_usr_x_rest_rank = linecomb2.argsort(axis=0).argsort(axis=0) + 1
+
+allwinnerbyrank  = np.argmin(M_usr_x_rest_rank)
+
+rowsum = np.sum(M_usr_x_rest_rank, axis=1)
+
+allwinnerbyrank  = np.argmin(rowsum)
+print("Winner for all by ranking:", orderedRests[allwinnerbyrank])
+# Why is there a difference between the two?  What problem arrives?  What does 
+#it represent in the real world?
+print(""""The numbers are different because the ranking transforms the score to a lower dimensional
+      space and seems to be losing some of the information.
+      """)
 # How should you preprocess your data to remove this problem. 
-
+print(""""Each restaurant could receive a total score and then rank in order by that score in order to remove the abstraction.
+      \n You could also add a weight to some factors to push the metric in different ways."""
+      )
 # Find  user profiles that are problematic, explain why?
-
+print(""" Users 8 and 1 have tie scores. This will make decsion less clear for some restaurants.
+      We could have a restaurant with inflated or deflated ranking.""")
+      
 # Think of two metrics to compute the disatistifaction with the group.  
 
 # Should you split in two groups today? 
