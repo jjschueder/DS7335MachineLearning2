@@ -93,42 +93,42 @@ people = {'Jane': {'willingness to travel': 5,
 }
 
 # Transform the user data into a matrix(M_people). Keep track of column and row ids.   
-
+print('\n \n People Details: \n \n')
 orderedNames = ['Jane', 'Bob', 'Mandy', 'Lauren', 'Emma', 'Byron', 'Kate', 'April', 'Aaron','Joe']
 dictlist =[]
 for key in people:
-    print(key)
-    print(people[key].values())
+    print("Name: ", key)
+    print(key, "'s choices:", people[key].values())
     temp = list(people[key].values())
     dictlist.append(temp)
 
 peopleMatrix = np.array(dictlist)    
-print(peopleMatrix)
+print("Here is the people matrix \n", peopleMatrix)
 # Next you collected data from an internet website. You got the following information.
 #You'll then create another dictionary of reviews!
-restaurants  = {'Gringos':{'distance' : 2,
+restaurants  = {'Gringos':{'distance' : 5,
                           'novelty' : 2,
                           'cost': 3,
                           'average rating': 4,
                           'cuisine': 5,
-                          'vegetarian': 2
+                          'vegetarian': 4
                           },
-                'Tapped':{'distance' : 1,
-                        'novelty' : 1,
-                        'cost': 5,
+                'Tapped':{'distance' : 5,
+                        'novelty' : 4,
+                        'cost': 2,
                         'average rating': 5,
                         'cuisine': 5,
                         'vegetarian': 2
                           },
-                'Rudys':{'distance' : 4,
-                        'novelty' : 2,
-                        'cost': 3,
+                'Rudys':{'distance' : 3,
+                        'novelty' : 4,
+                        'cost': 4,
                         'average rating': 5,
                         'cuisine': 5,
                         'vegetarian': 2
                           },
-                'Corkscrew':{'distance' : 4,
-                        'novelty' : 3,
+                'Corkscrew':{'distance' : 3,
+                        'novelty' : 5,
                         'cost': 3,
                         'average rating': 5,
                         'cuisine': 5,
@@ -139,39 +139,39 @@ restaurants  = {'Gringos':{'distance' : 2,
                         'cost': 4,
                         'average rating': 5,
                         'cuisine': 5,
-                        'vegetarian': 3
+                        'vegetarian': 1
                           },
-                'Redfish':{'distance' : 4,
-                        'novelty' : 3,
-                        'cost': 5,
+                'Redfish':{'distance' : 3,
+                        'novelty' : 5,
+                        'cost': 1,
                         'average rating': 5,
                         'cuisine': 5,
                         'vegetarian': 4
                           },
-                'Walkons':{'distance' : 1,
+                'Walkons':{'distance' : 5,
                         'novelty' : 4,
-                        'cost': 5,
+                        'cost': 2,
                         'average rating': 4,
                         'cuisine': 5,
-                        'vegetarian': 4
+                        'vegetarian': 1
                           },
                 'Shogun':{'distance' : 5,
-                        'novelty' : 3,
-                        'cost': 5,
+                        'novelty' : 4,
+                        'cost': 1,
                         'average rating': 3,
                         'cuisine': 5,
                         'vegetarian': 4
                           },
-                'Shilecanis':{'distance' : 4,
+                'Shilecanis':{'distance' : 1,
                         'novelty' : 4,
-                        'cost': 5,
+                        'cost': 1,
                         'average rating': 5,
                         'cuisine': 5,
                         'vegetarian': 4
                           },
                 'Butlerhouse':{'distance' : 3,
                         'novelty' : 5,
-                        'cost': 5,
+                        'cost': 1,
                         'average rating': 5,
                         'cuisine': 5,
                         'vegetarian': 2
@@ -185,15 +185,16 @@ def get_real_rank(data):
     return rankdata(len(data-rankdata(data)))
     
 # Transform the restaurant data into a matrix(M_resturants) use the same column index.
+print('\n \n  Restaurant Details: \n \n')
 dictlist =[]
 for key in restaurants:
-    print(key)
-    print(restaurants[key].values())
+    print("Restaurant:", key)
+    print("Restaurant rankings: ", restaurants[key].values())
     temp = list(restaurants[key].values())
     dictlist.append(temp)
 
 restMatrix = np.array(dictlist)    
-print(restMatrix)
+print("Here is the restaurant matrix \n", restMatrix)
 
 # The most important idea in this project is the idea of a linear combination.  
 # Informally describe what a linear combination is  and how it will relate to our restaurant matrix.
@@ -244,27 +245,54 @@ allwinnerbyrank  = np.argmin(M_usr_x_rest_rank)
 rowsum = np.sum(M_usr_x_rest_rank, axis=1)
 
 allwinnerbyrank  = np.argmin(rowsum)
-print("Winner for all by ranking:", orderedRests[allwinnerbyrank])
+print("\n \n Winner for all by ranking:", orderedRests[allwinnerbyrank])
 # Why is there a difference between the two?  What problem arrives?  What does 
 #it represent in the real world?
-print(""""The numbers are different because the ranking transforms the score to a lower dimensional
+print("""\n \n The numbers are different because the ranking transforms the score to a lower dimensional
       space and seems to be losing some of the information.
       """)
 # How should you preprocess your data to remove this problem. 
-print(""""Each restaurant could receive a total score and then rank in order by that score in order to remove the abstraction.
+print("""Each restaurant could receive a total score and then rank in order by that score in order to remove the abstraction.
       \n You could also add a weight to some factors to push the metric in different ways."""
       )
 # Find  user profiles that are problematic, explain why?
-print(""" Users 8 and 1 have tie scores. This will make decsion less clear for some restaurants.
+print(""" \n \n Users 8 and 1 have tie scores. This will make decsion less clear for some restaurants.
       We could have a restaurant with inflated or deflated ranking.""")
       
 # Think of two metrics to compute the disatistifaction with the group.  
 
+print("""\n \n One metric would be to count the number of people that would
+      be not satisfied with the winning choice. e.g. a count of people were the top choice
+      of the group was near the bottom of the person's ranking. 
+      \n Another ranking would be percentage of people that would be actually like
+      the chosen winner. e.g. how many was the winner the top choice for?""")
+      
+
 # Should you split in two groups today? 
+print("""\n \n This group has many of same standards and likes. Therefore this group shouldn't split. """)
+# Ok. Now you just found out the boss is paying for the meal. How should you adjust? 
+#Now what is the best restaurant?
+print(""" \n \n  I would invert the cost ranking and recalculate. Unfortuantely the
+      rank is the same. """)
+      
+restMatrix2 = restMatrix
+restMatrixr = (restMatrix[ :,2] - 5) * -1
+restMatrix2[:, 2] = restMatrixr[:] 
 
-# Ok. Now you just found out the boss is paying for the meal. How should you adjust? Now what is the best restaurant?
+peopleMatrix2 = peopleMatrix
+peopleMatrixr = (peopleMatrix[ :,2] - 5) * -1
+peopleMatrix[:, 2] = peopleMatrixr[:] 
 
-# Tomorrow you visit another team. You have the same restaurants and they told you their optimal ordering for restaurants.  Can you find their weight matrix? 
+
+favforall2 =sum(np.dot(peopleMatrix2.T, restMatrix2))
+allwinner2  = np.argmax(favforall)
+print("\n \n Winner for all:", orderedRests[allwinner2])
+
+# Tomorrow you visit another team. You have the same restaurants and they told you their
+# optimal ordering for restaurants.  Can you find their weight matrix? 
+
+print("""\n \n  If I had a dictionary of  new eaters I would convert them into a new people matrix
+      and multiply them by teh restaurant matrix in the same was as above.""")
 
 
 

@@ -45,7 +45,9 @@ from sklearn import preprocessing
 from sklearn.preprocessing import label_binarize
 
 
-
+os.environ['HTTP_PROXY'] = 'http://proxy.rockwellcollins.com:9090'
+os.environ['http_proxy'] = 'http://proxy.rockwellcollins.com:9090'
+os.environ['HTTPS_PROXY'] = 'http://proxy.rockwellcollins.com:9090'
 
 #bclf = clf(**param)
 
