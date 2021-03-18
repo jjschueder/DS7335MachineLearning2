@@ -148,7 +148,7 @@ batch_size = 32
 model.summary()
 #model.layers.pop()
 #model.summary()
-modelvalueshist = model.fit(x_train, y_train,
+modelvalueshist = model.fit(xrs_train, yrs_train,
               validation_split=0.2,
               batch_size=batch_size,
               epochs=epochs,
@@ -159,11 +159,11 @@ modelvalueshist = model.fit(x_train, y_train,
 
 plot_training_curves(modelvalueshist)
 
-preds = model.predict(x_test)
+preds = model.predict(xrs_test)
 
 preds = np.argmax(preds, axis=1).astype("uint8")
 predsy = keras.utils.to_categorical(preds, num_classes)
-accuracy_score(y_test, predsy)
+accuracy_score(yrs_test, predsy)
 
 #https://keras.io/guides/transfer_learning/
 
