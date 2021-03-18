@@ -19,6 +19,10 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Dropout, Activation, Flatten,  Conv2D, MaxPooling2D
 
 from tensorflow.keras import backend as K
+
+import numpy as np
+from sklearn.metrics import accuracy_score
+
 now = datetime.datetime.now
 batch_size = 128
 num_classes = 5
@@ -154,39 +158,7 @@ plt.imshow(first_array)
 #Actually displaying the plot if you are not in interactive mode
 plt.show()
 
-import csv
-rows = [] 
-with open('Q:\A_Z HandwrittenData.csv', 'r') as csvfile: 
-    # creating a csv reader object 
-    csvreader = csv.reader(csvfile) 
-      
-    # extracting field names through first row 
-    fields = next(csvreader) 
-  
-    # extracting each data row one by one 
-    ctr = 0
-    for row in csvreader: 
-        ctr +=1
-        rows.append(row) 
-        if ctr >= 200:
-            break
-import numpy as np  
-from sklearn.model_selection import train_test_split      
-dataset = np.loadtxt('Q:\A_Z HandwrittenData.csv', delimiter=',', max_rows = 20000)        
 
-X = dataset[:,0:784]
-Y = dataset[:,0]
 
-(x_train, x_test, y_train, y_test) = train_test_split(X, Y, test_size=0.75, random_state=101)
 
-x_train = x_train.reshape(x_train.shape[0], 28, 28).astype('float')
-x_test = x_test.reshape(x_test.shape[0], 28, 28).astype('float')
 
-import matplotlib.pyplot as plt
-first_array=x_train[9]
-#Not sure you even have to do that if you just want to visualize it
-#first_array=255*first_array
-#first_array=first_array.astype("uint8")
-plt.imshow(first_array)
-#Actually displaying the plot if you are not in interactive mode
-plt.show()
