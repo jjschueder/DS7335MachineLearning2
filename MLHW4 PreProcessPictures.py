@@ -30,8 +30,9 @@ labeldict = dict(res)
 handY  = []
 
 #intialize list of image arrays
-img_array_list = []
+ximg_array_list = []
 img_28X28_list = []
+xfar =np.empty((1,28,28,1), dtype=float)
 for dirpath, dirnames, files in os.walk(path):
     for name in files:
         print(path + '\\' + name)
@@ -53,17 +54,22 @@ for dirpath, dirnames, files in os.walk(path):
                     label = 4
                 handY.append(label)  
         #open image and convert to various np arrays        
-        img = cv2.imread(path + '\\' + name)
-        imggray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+        #img = cv2.imread(path + '\\' + name)
+        img = Image.open(path + '\\' + name).convert("L")
+        img = np.resize(img, (28,28,1))
+        im2arr = np.array(img)
+        im2arr = im2arr.reshape(1,28,28,1)
+        
+        xfar = np.append(xfar,im2arr, axis = 0) 
 
-        img_pil = Image.fromarray(img)
+
         img_28x28 = np.array(img_pil.resize((28,28), Image.ANTIALIAS))
         img_28X28_list.append(img_28x28)
-        img_array = (img_28x28.flatten())
-        img_array  = img_array.reshape(-1,1).T
-        img_array_list.append(img_array)
+        ximg_array = (img_28x28.flatten())
+        ximg_array  = ximg_array.reshape(-1,1).T
+        ximg_array_list.append(ximg_array)
         
-        
+xfar = xfar[1:28]
 #convert Y labels to numpy array
 Yarr = np.array(handY)
 
@@ -88,3 +94,24 @@ for x in img_28X28_list:
 #first_array= first_array.reshape(28,28)
 #
 #plt.imshow(first_array)
+
+def reshape_data(train, num_classes):
+#    x_train = train[0].reshape((train[0].shape[0],) + input_shape)
+#    x_test = test[0].reshape((test[0].shape[0],) + input_shape)
+#    x_train = x_train.astype('float32')
+#    x_test = x_test.astype('float32')
+#    x_train /= 255
+#    x_test /= 255
+#    print('x_train shape:', x_train.shape)
+#    print(x_train.shape[0], 'train samples')
+#    print(x_test.shape[0], 'test samples')
+    # convert class vectors to binary class matrices
+    y_train = keras.utils.to_categorical(train[1], num_classes)
+#    y_test = keras.utils.to_categorical(test[1], num_classes)
+    return y_train
+
+num_classes = 5
+
+yjoesrs = reshape_data((xfar, Yarr), num_classes = num_classes)
+
+
