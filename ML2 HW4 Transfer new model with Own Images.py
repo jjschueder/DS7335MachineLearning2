@@ -138,6 +138,12 @@ model = Sequential([
               activation='relu'),
       keras.layers.MaxPooling2D(pool_size=pool_size),
 
+#      # ConvNet 3
+#      keras.layers.Conv2D(filters, kernel_size,
+#              padding = 'valid',
+#              activation='relu'),
+#      keras.layers.MaxPooling2D(pool_size=pool_size),
+
       # classification 
       # will retrain from here
       keras.layers.Flatten(name='flatten'),
@@ -155,11 +161,12 @@ model = Sequential([
 
 es = keras.callbacks.EarlyStopping(min_delta=0.01, patience=2)
 #opt = SGD(lr=0.01, momentum=0.9)
-model.compile(loss='categorical_crossentropy',
+model.compile(loss="sparse_categorical_crossentropy",
+        #loss='categorical_crossentropy',
                       optimizer='adam',
                       metrics=['accuracy'])
 
-history = model.fit(xrs_train, yrs_train,
+history = model.fit(xrs_train, y_train,
                     #validation_data=(xrs_test, yrs_test),
                     validation_split=0.2,
                     batch_size=32,
@@ -201,11 +208,19 @@ penult_layer = model.get_layer(name='penult')
 # create a new output layer
 output_layer = keras.layers.Dense(5, activation='softmax')(penult_layer.output)
 
+# ConvNet 3
+#conv3 = keras.layers.Conv2D(filters, kernel_size,
+#                            padding = 'valid',
+#                            activation='relu')
+#pool3 = keras.layers.MaxPooling2D(pool_size=pool_size)
 new_model = Model(model.input, output_layer)
+#new_model = Model(inputs=[model.input, conv3, pool3], outputs=output_layer)
 new_model.summary()
 
 
-new_model.compile(loss='categorical_crossentropy',
+new_model.compile(
+        loss = "sparse_categorical_crossentropy",
+        #loss='categorical_crossentropy',
                   optimizer='adam',
                   metrics=['accuracy'])
 
@@ -222,26 +237,40 @@ Xoi,Yoi = get_images()
 
 (xlrs_train, xlrs_test, ylrs_train, ylrs_test) = train_test_split(Xoi,Yoi, test_size=0.15, random_state=101)
 num_classes
-ylrs_train = keras.utils.to_categorical(ylrs_train, num_classes)
-ylrs_test = keras.utils.to_categorical(ylrs_test, num_classes)
+#ylrs_train = keras.utils.to_categorical(ylrs_train, num_classes)
+#ylrs_test = keras.utils.to_categorical(ylrs_test, num_classes)
 
-(unique, counts) = np.unique(ylrs_train, return_counts=True)
-frequencies = np.asarray((unique, counts))
-
-(unique, counts) = np.unique(ylrs_test, return_counts=True)
-frequencies2 = np.asarray((unique, counts))
+#(unique, counts) = np.unique(ylrs_train, return_counts=True)
+#frequencies = np.asarray((unique, counts))
+#
+#(unique, counts) = np.unique(ylrs_test, return_counts=True)
+#frequencies2 = np.asarray((unique, counts))
 
 xlrs_train= xlrs_train.astype('float32')
 xlrs_test = xlrs_test.astype('float32')
 xlrs_train /= 255
 xlrs_test /= 255
 
+def data_peek(data):
+    # Look at some random numbers
+    X_shuffle = shuffle(data.copy(), random_state=42)
+
+    print("Look at some random images\n")
+    plt.figure(figsize=(12, 10))
+    row, colums = 4, 4
+    for i in range(16):
+        plt.subplot(colums, row, i + 1)
+        plt.imshow(X_shuffle[i].reshape(28, 28), interpolation="nearest", cmap="Greys")
+    return plt.show()
+
+data_peek(xlrs_train)
+
 #no longer required as shaped in include program
 #xlrs_train, xlrs_test, ylrs_train, ylrs_test = reshape_data((xl_train, yl_train),
 #            (xl_test, yl_test), num_classes)
 es = keras.callbacks.EarlyStopping(min_delta=0.0001, patience=500)
 new_model_hist = new_model.fit(xlrs_train, ylrs_train,
-                              #validation_data=(xlrs_test, ylrs_test),
+                              validation_data=(xlrs_test, ylrs_test),
                               validation_split=0.2,
                               batch_size=32,
                               epochs=1000,
@@ -268,7 +297,8 @@ preds = new_model.predict(xlrs_test)
 
 preds = np.argmax(preds, axis=1).astype("uint8")
 predsy = keras.utils.to_categorical(preds, num_classes)
-accuracy_score(ylrs_test, predsy)
+acylrs_test = keras.utils.to_categorical(ylrs_test, num_classes)
+accuracy_score(acylrs_test, predsy)
 
 
 #first_array=np.array(xl_test[1])

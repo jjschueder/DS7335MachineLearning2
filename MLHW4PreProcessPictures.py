@@ -52,12 +52,12 @@ def get_images():
     xfar =np.empty((1,28,28,1), dtype=float)
     for dirpath, dirnames, files in os.walk(path):
         for name in files:
-            #print(path + '\\' + name)
+            print(path + '\\' + name)
             totalpath = path + '\\' + name
             for k, v in labeldict.items():
                 #add labels of images to list to get to Y values
                 if k == totalpath:
-                    print(v)
+                    #print(v)
                     label = v
                     if label == 'A':
                         label = 0
@@ -73,21 +73,23 @@ def get_images():
             #open image and convert to various np arrays        
             #img = cv2.imread(path + '\\' + name)
             #https://medium.com/@ashok.tankala/build-the-mnist-model-with-your-own-handwritten-digits-using-tensorflow-keras-and-python-f8ec9f871fd3
-            img = Image.open(path + '\\' + name).convert('RGB')
+            img = Image.open(path + '\\' + name).convert('L')
+            #.convert('RGB')
             #plt.imshow(img)
             #.convert("L")
             #img =  make_square(img)
-            img = ImageOps.invert(img)
+            #img = ImageOps.invert(img)
             #plt.imshow(img)
-            img =  black_background_thumbnail(img)
+            #img =  black_background_thumbnail(img)
             #plt.imshow(img)
+       
             img_28x28 = np.array(img.resize((28,28), Image.ANTIALIAS))
-            img = np.resize(img, (28,28,1))
+            #img = np.resize(img, (28,28,1))
             #plt.figure(figsize=(50,50))
-            #plt.imshow(img_28x28)
+            plt.imshow(img_28x28)
             ximg_28X28_list.append(img_28x28)
-            im2arr = np.array(img)
-            im2arr = im2arr.reshape(1,28,28,1)        
+            #im2arr = np.array(img)
+            im2arr = img_28x28.reshape(1,28,28,1)        
             xfar = np.append(xfar,im2arr, axis = 0)
             
             
@@ -126,37 +128,37 @@ def get_images():
     #convert Y labels to numpy array
     Yarr = np.array(handY)
     xfar = xfar.astype('float32')
-    from keras_preprocessing.image import ImageDataGenerator
-    from matplotlib import pyplot
-    # CREATE MORE IMAGES VIA DATA AUGMENTATION
-    #https://keras.io/api/preprocessing/image/
-    #https://machinelearningmastery.com/image-augmentation-deep-learning-keras/
-    #https://blog.keras.io/building-powerful-image-classification-models-using-very-little-data.html
-    #https://www.kaggle.com/cdeotte/25-million-images-0-99757-mnist
-    datagen = ImageDataGenerator(
-        rotation_range=10,  
-        zoom_range = 0.10,  
-        width_shift_range=0.1, 
-        height_shift_range=0.1)
-    datagen.fit(xfar)
-    xfar2 = xfar
-    Yarr2 = Yarr
-    batches = 0
-    for x_batch, y_batch in datagen.flow(xfar, Yarr, batch_size=1):
-	# create a grid of 3x3 images
-        #print(x_batch, y_batch)
-        
-        xfar2 = np.append(xfar2,x_batch, axis = 0)
-        Yarr2 = np.append(Yarr2, y_batch, axis = 0)
-        batches += 1
-        if batches >= 20000:
-            # we need to break the loop by hand because
-            # the generator loops indefinitely
-            break
+#    from keras_preprocessing.image import ImageDataGenerator
+#    from matplotlib import pyplot
+#    # CREATE MORE IMAGES VIA DATA AUGMENTATION
+#    #https://keras.io/api/preprocessing/image/
+#    #https://machinelearningmastery.com/image-augmentation-deep-learning-keras/
+#    #https://blog.keras.io/building-powerful-image-classification-models-using-very-little-data.html
+#    #https://www.kaggle.com/cdeotte/25-million-images-0-99757-mnist
+#    datagen = ImageDataGenerator(
+#        rotation_range=10,  
+#        zoom_range = 0.10,  
+#        width_shift_range=0.1, 
+#        height_shift_range=0.1)
+#    datagen.fit(xfar)
+#    xfar2 = xfar
+#    Yarr2 = Yarr
+#    batches = 0
+#    for x_batch, y_batch in datagen.flow(xfar, Yarr, batch_size=1):
+#	# create a grid of 3x3 images
+#        #print(x_batch, y_batch)
+#        
+#        xfar2 = np.append(xfar2,x_batch, axis = 0)
+#        Yarr2 = np.append(Yarr2, y_batch, axis = 0)
+#        batches += 1
+#        if batches >= 20000:
+#            # we need to break the loop by hand because
+#            # the generator loops indefinitely
+#            break
         
 
         
-    return xfar2, Yarr2
+    return xfar, Yarr
 
 #X, Y = get_images()
 ##
@@ -172,10 +174,12 @@ def get_images():
 #    #compact_2828_list.append(x[:,:,0])
 #    plt.show()
 #
-#plt.imshow(img_28x28)
+#plt.imshow(img)
 #plt.show()
-#    
-#plt.imshow(flippedud_img)
+#
+#img_28x28 = np.array(img.resize((28,28), Image.ANTIALIAS))
+##    
+#plt.imshow(img_28x28)
 #plt.show()
 #
 #
