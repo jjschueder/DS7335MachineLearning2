@@ -128,37 +128,37 @@ def get_images():
     #convert Y labels to numpy array
     Yarr = np.array(handY)
     xfar = xfar.astype('float32')
-#    from keras_preprocessing.image import ImageDataGenerator
-#    from matplotlib import pyplot
-#    # CREATE MORE IMAGES VIA DATA AUGMENTATION
-#    #https://keras.io/api/preprocessing/image/
-#    #https://machinelearningmastery.com/image-augmentation-deep-learning-keras/
-#    #https://blog.keras.io/building-powerful-image-classification-models-using-very-little-data.html
-#    #https://www.kaggle.com/cdeotte/25-million-images-0-99757-mnist
-#    datagen = ImageDataGenerator(
-#        rotation_range=10,  
-#        zoom_range = 0.10,  
-#        width_shift_range=0.1, 
-#        height_shift_range=0.1)
-#    datagen.fit(xfar)
-#    xfar2 = xfar
-#    Yarr2 = Yarr
-#    batches = 0
-#    for x_batch, y_batch in datagen.flow(xfar, Yarr, batch_size=1):
-#	# create a grid of 3x3 images
-#        #print(x_batch, y_batch)
-#        
-#        xfar2 = np.append(xfar2,x_batch, axis = 0)
-#        Yarr2 = np.append(Yarr2, y_batch, axis = 0)
-#        batches += 1
-#        if batches >= 20000:
-#            # we need to break the loop by hand because
-#            # the generator loops indefinitely
-#            break
+    from keras_preprocessing.image import ImageDataGenerator
+    from matplotlib import pyplot
+    # CREATE MORE IMAGES VIA DATA AUGMENTATION
+    #https://keras.io/api/preprocessing/image/
+    #https://machinelearningmastery.com/image-augmentation-deep-learning-keras/
+    #https://blog.keras.io/building-powerful-image-classification-models-using-very-little-data.html
+    #https://www.kaggle.com/cdeotte/25-million-images-0-99757-mnist
+    datagen = ImageDataGenerator(
+        rotation_range=10,  
+        zoom_range = 0.10,  
+        width_shift_range=0.1, 
+        height_shift_range=0.1)
+    datagen.fit(xfar)
+    xfar2 = xfar
+    Yarr2 = Yarr
+    batches = 0
+    for x_batch, y_batch in datagen.flow(xfar, Yarr, batch_size=1):
+	# create a grid of 3x3 images
+        #print(x_batch, y_batch)
+        
+        xfar2 = np.append(xfar2,x_batch, axis = 0)
+        Yarr2 = np.append(Yarr2, y_batch, axis = 0)
+        batches += 1
+        if batches >= 20000:
+            # we need to break the loop by hand because
+            # the generator loops indefinitely
+            break
         
 
         
-    return xfar, Yarr
+    return xfar2, Yarr2
 
 #X, Y = get_images()
 ##
